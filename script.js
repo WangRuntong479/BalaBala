@@ -15,7 +15,7 @@ function appendOperator(operator) {
 
 function calculateResult() {
   try {
-    // 计算表达式
+    // 使用 eval 计算表达式并更新显示框
     let result = eval(currentInput);
     document.getElementById('result').value = result;
     currentInput = result.toString();  // 将结果存储到 currentInput 变量中，方便继续计算
