@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魁地奇比赛</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .content {
+      margin: 20px;
+    }
+    .chapter {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .chapter ul {
+      list-style-type: square;
+      margin-left: 20px;
+    }
+    .chapter mark {
+      background-color: yellow;
+    }
+    .chapter em {
+      font-style: italic;
+    }
+    .chapter strong {
+      font-weight: bold;
+    }
+    .interactive {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .character-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      background-color: #5cb85c;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+    .character-btn:hover {
+      background-color: #4cae4c;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>魁地奇比赛</h1>
+    <p>欢迎来到霍格沃茨的魁地奇比赛！在这里，你将体验魔法世界中最激动人心的运动。</p>
+  </header>
+
+  <div class="content">
+    <!-- 第一章：比赛规则 -->
+    <div class="chapter">
+      <h2>比赛规则</h2>
+      <p>魁地奇是由七名球员组成的两支队伍进行的飞行比赛。比赛中，球员们骑着扫帚在空中飞行，目的是通过投掷球进入对方的球门。</p>
+      <dl>
+        <dt><strong>球队组成：</strong></dt>
+        <dd>每支队伍有七名球员，分别是：三个<strong>追球手</strong>，两个<strong>守门员</strong>，两个<strong>击球手</strong>，以及一个<strong>找球手</strong>。</dd>
+
+        <dt><strong>比赛中的球：</strong></dt>
+        <dd>
+          <ul>
+            <li><strong>金色飞贼：</strong>一个快速的小球，找球手需要捕捉它，得分150分。</li>
+            <li><strong>鬼飞球：</strong>用来攻击对方球员的球，击球手负责用球棒击打。</li>
+            <li><strong>四分之一球：</strong>一个较大的球，追球手用来得分。</li>
+          </ul>
+        </dd>
+
+        <dt><strong>比赛结束：</strong></dt>
+        <dd>比赛在找球手捕捉到金色飞贼后结束，得分最多的队伍获胜。</dd>
+      </dl>
+    </div>
+
+    <!-- 第二章：哈利·波特的魁地奇之路 -->
+    <div class="chapter">
+      <h2>哈利·波特的魁地奇之路</h2>
+      <p>哈利·波特首次加入霍格沃茨的魁地奇队时，还是一个新手。然而，凭借他的勇气和天赋，哈利很快成为了队伍中的<strong>找球手</strong>。</p>
+      <p><mark>哈利的第一场比赛</mark>充满了挑战，但他最终成功地捕捉到了金色飞贼，帮助格兰芬多队赢得了比赛。</p>
+      
+      <p>哈利的魁地奇技巧使他成为了霍格沃茨历史上最年轻的找球手之一。</p>
+    </div>
+
+    <!-- 第三章：比赛的激烈竞争 -->
+    <div class="chapter">
+      <h2>比赛的激烈竞争</h2>
+      <p>在霍格沃茨的魁地奇比赛中，格兰芬多队与其他学院的竞争非常激烈，尤其是与斯莱特林队的比赛，常常是最具挑战性的。</p>
+      <p><strong>斯莱特林队</strong>拥有强大的球员，尤其是他们的找球手——<em>德拉科·马尔福</em>，他是哈利最大的竞争对手。</p>
+      <p>尽管两队的竞争异常激烈，但哈利·波特和他的队友们始终以集体合作和不屈不挠的精神，击败了对手。</p>
+    </div>
+  </div>
+
+  <div class="interactive">
+    <h2>参与互动</h2>
+    <p>你想了解更多关于以下角色的信息吗？选择一个角色，查看他们在魁地奇比赛中的表现。</p>
+    <button class="character-btn" onclick="showCharacterInfo('哈利')">哈利·波特</button>
+    <button class="character-btn" onclick="showCharacterInfo('德拉科')">德拉科·马尔福</button>
+    <button class="character-btn" onclick="showCharacterInfo('赫敏')">赫敏·格兰杰</button>
+    <button class="character-btn" onclick="showCharacterInfo('罗恩')">罗恩·韦斯利</button>
+    <p id="character-info"></p>
+  </div>
+
+  <script>
+    function showCharacterInfo(character) {
+      let info = '';
+      switch(character) {
+        case '哈利':
+          info = '哈利·波特，格兰芬多的找球手，以非凡的飞行技能和勇气著称。他曾在多个魁地奇比赛中带领格兰芬多获胜。';
+          break;
+        case '德拉科':
+          info = '德拉科·马尔福，斯莱特林队的找球手，技艺高超且充满敌意，是哈利的长期对手。';
+          break;
+        case '赫敏':
+          info = '赫敏·格兰杰，虽然不是魁地奇队员，但她在哈利的比赛中总是提供重要的支持，尤其是战术上的指导。';
+          break;
+        case '罗恩':
+          info = '罗恩·韦斯利，格兰芬多队的守门员，虽然有时表现不稳定，但他始终是队伍的中坚力量。';
+          break;
+        default:
+          info = '请选择一个角色。';
+      }
+      document.getElementById('character-info').innerHTML = info;
+    }
+  </script>
+
+</body>
+</html>
