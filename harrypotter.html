@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>魁地奇比赛飞行体验</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-image: url('quidditch_field.jpg'); /* 魁地奇场地背景图 */
+            background-size: cover; /* 确保背景图覆盖整个页面 */
+            background-position: center; /* 居中显示背景图 */
+            color: white; /* 设置文字颜色为白色，避免与背景色冲突 */
+        }
         .container { width: 80%; margin: 20px auto; }
         header { text-align: center; }
-        #intro { padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        #intro h1, #intro h2 { color: #333; }
-        p { font-size: 1.1em; line-height: 1.6; color: #555; }
+        #intro { padding: 20px; background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); }
+        #intro h1, #intro h2 { color: #fff; }
+        p { font-size: 1.1em; line-height: 1.6; color: #ddd; }
         ul, ol { font-size: 1.1em; margin-left: 20px; }
         em { color: #d9534f; }
         strong { color: #5bc0de; }
