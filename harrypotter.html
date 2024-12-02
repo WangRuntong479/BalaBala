@@ -3,131 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>魁地奇比赛 - 哈利波特世界</title>
+    <title>魁地奇比赛飞行 - 哈利波特世界</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        #startFlying {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            padding: 10px;
             background-color: #990000;
             color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        header h1 {
-            font-size: 3em;
-            margin: 0;
-        }
-
-        section {
-            padding: 20px;
-        }
-
-        h2, h3 {
-            color: #990000;
-        }
-
-        ul {
-            list-style-type: square;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .image-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .image-container img {
-            width: 80%;
-            max-width: 800px;
-        }
-
-        .content {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .interactive {
-            text-align: center;
-        }
-
-        button {
-            background-color: #990000;
-            color: white;
-            border: none;
-            padding: 10px 20px;
             font-size: 1.2em;
             cursor: pointer;
-            margin-top: 20px;
-            border-radius: 5px;
         }
-
-        button:hover {
-            background-color: #660000;
-        }
-
-        .gif-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
     </style>
 </head>
 <body>
 
-<header>
-    <h1>魁地奇比赛 - 哈利波特世界</h1>
-</header>
+<!-- 魁地奇比赛飞行按钮 -->
+<button id="startFlying">开始飞行</button>
 
-<section>
-    <h2>魁地奇比赛简介</h2>
-    <p><strong>魁地奇</strong> 是一项在魔法世界中非常受欢迎的飞行比赛，参赛者骑着飞天扫帚，在空中进行快速的比赛。比赛的目标是通过投篮得分，或者抓住“金色飞贼”来获得更多的分数。</p>
-    
-    <div class="image-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Quidditch_Broomstick_Training.jpg" alt="魁地奇比赛场景" />
-    </div>
+<!-- Three.js 场景 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    let scene, camera, renderer, broomstick, clock, controls;
 
-    <h3>比赛规则</h3>
-    <ul>
-        <li>每支队伍由七名成员组成。</li>
-        <li>比赛包括四个球：一个“飞贼”，一个“火箭球”，两个“防守球”。</li>
-        <li>每支队伍的目标是用“火箭球”得分，并通过抓住“金色飞贼”来赢得比赛。</li>
-    </ul>
-    
-    <div class="image-container">
-        <img src="https://www.hp-lexicon.org/wp-content/uploads/2017/12/Quidditch-Game.jpg" alt="魁地奇比赛规则" />
-    </div>
-    
-    <h3>参赛队伍</h3>
-    <p><mark>格兰芬多队</mark> vs <mark>斯莱特林队</mark></p>
+    // 初始化 Three.js 场景
+    function init() {
+        // 创建场景
+        scene = new THREE.Scene();
+        
+        // 创建相机
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    <div class="content">
-        <div class="interactive">
-            <button onclick="alert('你选择了格兰芬多队！')">选择格兰芬多队</button>
-        </div>
-        <div class="interactive">
-            <button onclick="alert('你选择了斯莱特林队！')">选择斯莱特林队</button>
-        </div>
-    </div>
+        // 创建渲染器
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-    <h3>比赛精彩时刻</h3>
-    <div class="gif-container">
-        <img src="https://media.giphy.com/media/l0K4b5rEdTVHrRt5W/giphy.gif" alt="魁地奇比赛动图" />
-    </div>
+        // 添加光源
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(0, 10, 20);
+        scene.add(light);
 
-    <p>观看精彩的魁地奇比赛动图，感受飞行的速度与激情！</p>
-</section>
+        // 创建扫帚模型
+        const broomGeometry = new THREE.CylinderGeometry(0.2, 0.2, 5, 32);
+        const broomMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
+        broomstick = new THREE.Mesh(broomGeometry, broomMaterial);
+        broomstick.position.set(0, 2, 0); // 设置扫帚的位置
+        scene.add(broomstick);
+
+        // 创建地面
+        const planeGeometry = new THREE.PlaneGeometry(100, 100);
+        const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x228B22, side: THREE.DoubleSide });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.x = Math.PI / 2; // 使地面平行
+        scene.add(plane);
+
+        // 创建天空背景
+        const skyGeometry = new THREE.SphereGeometry(500, 60, 60);
+        const skyMaterial = new THREE.MeshBasicMaterial({
+            color: 0x87CEEB,
+            side: THREE.BackSide
+        });
+        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+        scene.add(sky);
+
+        // 设置相机位置
+        camera.position.z = 10;
+
+        // 创建时钟
+        clock = new THREE.Clock();
+
+        // 渲染函数
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    }
+
+    // 飞行路径的模拟
+    function startFlying() {
+        let elapsedTime = 0;
+        let flightDuration = 5; // 飞行时间，单位为秒
+        let flightDistance = 50; // 飞行距离
+
+        function flightAnimation() {
+            let delta = clock.getDelta(); // 获取自上一帧以来的时间
+            elapsedTime += delta;
+
+            // 每次更新时，沿着 X 轴进行飞行
+            if (elapsedTime < flightDuration) {
+                broomstick.position.x += flightDistance * delta / flightDuration;
+                camera.position.x += flightDistance * delta / flightDuration;
+                camera.lookAt(broomstick.position); // 相机一直跟随扫帚飞行
+            } else {
+                // 飞行结束，停止动画
+                cancelAnimationFrame(flightAnimation);
+            }
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(flightAnimation);
+        }
+
+        flightAnimation();
+    }
+
+    // 事件绑定
+    document.getElementById('startFlying').addEventListener('click', () => {
+        startFlying(); // 点击按钮开始飞行
+    });
+
+    // 初始化 Three.js 场景
+    init();
+</script>
 
 </body>
 </html>
