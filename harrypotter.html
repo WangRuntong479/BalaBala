@@ -5,30 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>魁地奇比赛介绍</title>
     <style>
-    .video-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    object-fit: cover;
-    pointer-events: none; /* 确保内容可滚动 */
-}
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    color: white;
-}
-.container {
-    width: 80%;
-    margin: 20px auto;
-    overflow: auto; /* 允许滚动 */
-    padding-bottom: 50px; /* 避免内容被底部遮挡 */
-}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+            background-color: #000; /* 背景默认黑色，视频覆盖 */
+        }
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            overflow-y: auto; /* 启用滚动 */
+        }
         header {
             text-align: center;
+            margin-bottom: 20px;
         }
         h1 {
             color: black;
@@ -38,14 +44,11 @@ body {
         }
         #content {
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
         h2, h3 {
             color: #f4d03f;
         }
-        p, ul, ol {
+        p, ul, ol, dl {
             font-size: 1.1em;
             line-height: 1.6;
             color: #ddd;
@@ -73,14 +76,13 @@ body {
             margin-top: 30px;
             color: #ccc;
         }
-
     </style>
 </head>
 <body>
 
 <!-- 背景视频 -->
 <video class="video-background" autoplay muted loop>
-    <source src="Quddichi.mp4" type="video/mp4">
+    <source src="quidditch_field.mp4" type="video/mp4">
     您的浏览器不支持视频播放。
 </video>
 
