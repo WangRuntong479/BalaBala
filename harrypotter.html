@@ -30,6 +30,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
+        }
         h1, h2, h3, h4, h5, h6 {
             color: #ffd700;
         }
@@ -47,23 +48,23 @@
             font-style: italic;
         }
         strong {
-            color: #00ced1;
-            font-weight: bold;
+            color: inherit; /* 继承父元素的颜色 */
+            font-weight: bold; /* 保持加粗 */
         }
         mark {
             background-color: rgba(255, 192, 203, 0.5);
         }
-       mark.red {
-    background-color: rgba(255, 182, 193, 0.9); /* 淡红色 (light pink)，透明度为 0.9 */
-}
+        mark.red {
+            background-color: rgba(255, 182, 193, 0.9); /* 淡红色 (light pink)，透明度为 0.9 */
+        }
 
-mark.silver {
-    background-color: rgba(192, 192, 192, 0.9); /* 银色 (silver)，透明度为 0.9 */
-}
+        mark.silver {
+            background-color: rgba(192, 192, 192, 0.9); /* 银色 (silver)，透明度为 0.9 */
+        }
 
-mark.gold {
-    background-color: rgba(255, 223, 186, 0.9); /* 基色 (light gold)，透明度为 0.9 */
-}
+        mark.gold {
+            background-color: rgba(255, 223, 186, 0.9); /* 基色 (light gold)，透明度为 0.9 */
+        }
 
         ruby {
             color: #ffa500;
@@ -82,22 +83,23 @@ mark.gold {
             font-size: 0.9em;
             color: #aaa;
         }
+        /* 鬼飞球 */
         .ghoul-ball {
-    color: red; /* 红色 */
-    font-weight: bold; /* 加粗 */
-}
+            color: red; /* 红色 */
+            font-weight: bold; /* 加粗 */
+        }
 
-/* 游走球 */
-.wild-ball {
-    color: black; /* 黑色 */
-    font-weight: bold; /* 加粗 */
-}
+        /* 游走球 */
+        .wild-ball {
+            color: black; /* 黑色 */
+            font-weight: bold; /* 加粗 */
+        }
 
-/* 金色飞贼 */
-.gold-snitch {
-    color: gold; /* 金色 */
-    font-weight: bold; /* 加粗 */
-}
+        /* 金色飞贼 */
+        .gold-snitch {
+            color: gold; /* 金色 */
+            font-weight: bold; /* 加粗 */
+        }
     </style>
 </head>
 <body>
