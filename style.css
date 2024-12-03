@@ -1,0 +1,41 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap');
+
+.magic-title {
+    font-family: 'Cinzel Decorative', serif;
+    color: #fdfdfd;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #fbc7d4);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: magicGlow 5s infinite, gradientShift 6s infinite;
+    font-size: 3rem;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 30px rgba(173, 216, 230, 0.5);
+}
+
+/* 动态渐变 */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 闪烁效果 */
+@keyframes magicGlow {
+    0%, 100% {
+        text-shadow: 0 0 10px #ff6ec4, 0 0 20px #7873f5, 0 0 30px #fbc7d4, 0 0 40px #ff6ec4;
+    }
+    50% {
+        text-shadow: 0 0 15px #ff6ec4, 0 0 30px #7873f5, 0 0 45px #fbc7d4, 0 0 60px #ff6ec4;
+    }
+}
