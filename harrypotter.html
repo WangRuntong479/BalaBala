@@ -169,7 +169,21 @@
 <video class="video-background" autoplay muted loop>
     <source src="Quddichi.mp4" type="video/mp4">
 </video>
+<audio id="background-music" autoplay loop>
+    <source src="BM.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+    <script>
+        // 获取背景音乐元素
+        const backgroundMusic = document.getElementById('background-music');
 
+        // 等待页面加载完成后播放背景音乐
+        window.addEventListener('load', () => {
+            backgroundMusic.play().catch(error => {
+                console.log('背景音乐自动播放失败，需要用户交互：', error);
+            });
+        });
+    </script>
 <div class="container">
     <header>
         <h1>魁地奇比赛介绍</h1>
