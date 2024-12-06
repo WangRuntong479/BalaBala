@@ -48,46 +48,118 @@
             font-style: italic;
         }
         strong {
-            color: inherit;
-            font-weight: bold;
+            color: inherit; /* 继承父元素的颜色 */
+            font-weight: bold; /* 保持加粗 */
         }
         mark {
             background-color: rgba(255, 192, 203, 0.5);
         }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
-            z-index: 10;
-            width: 80%;
-            max-width: 400px;
+        mark.red {
+            background-color: rgba(255, 182, 193, 0.9); /* 淡红色 (light pink)，透明度为 0.9 */
+        }
+
+        mark.silver {
+            background-color: rgba(192, 192, 192, 0.9); /* 银色 (silver)，透明度为 0.9 */
+        }
+
+        mark.gold {
+            background-color: rgba(255, 223, 186, 0.9); /* 基色 (light gold)，透明度为 0.9 */
+        }
+
+        ruby {
+            color: #ffa500;
+        }
+        ruby rt {
+            font-size: 0.8em;
+            color: #ffcc00;
+        }
+        abbr {
+            text-decoration: underline dotted;
+            cursor: help;
+        }
+        footer {
             text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #aaa;
         }
+        /* 鬼飞球 */
+        .ghoul-ball {
+            color: red; /* 红色 */
+            font-weight: bold; /* 加粗 */
+        }
+
+        /* 游走球 */
+        .wild-ball {
+            color: black; /* 黑色 */
+            font-weight: bold; /* 加粗 */
+        }
+
+        /* 金色飞贼 */
+        .gold-snitch {
+            color: gold; /* 金色 */
+            font-weight: bold; /* 加粗 */
+        }
+    /* 去掉小问号的默认样式 */
+    abbr {
+        text-decoration: none;
+        cursor: pointer; /* 鼠标悬停时变为手型 */
+    }
+         dl a {
+        text-decoration: none; /* 去除下划线 */
+        color: inherit; /* 保持文字颜色一致 */
+    }
+    dl a:hover {
+        color: #0056b3; /* 鼠标悬停时改变颜色 */
+        text-decoration: underline; /* 悬停时添加下划线 */
+    }
+    body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* 定义弹窗样式 */
+        .popup {
+            display: none; /* 默认隐藏 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            width: 300px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
         .popup h3 {
-            color: #ffd700;
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
         }
+
         .popup p {
-            line-height: 1.5;
+            margin: 5px 0 0;
+            font-size: 0.9em;
+            color: #555;
         }
-        .popup button {
+
+        .popup-close {
+            text-align: right;
             margin-top: 10px;
-            padding: 5px 15px;
-            background-color: #ff4500;
-            color: #fff;
+        }
+
+        .popup-close button {
+            background: #007BFF;
+            color: white;
             border: none;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
         }
-        .popup button:hover {
-            background-color: #ff6347;
+
+        .popup-close button:hover {
+            background: #0056b3;
         }
     </style>
 </head>
@@ -105,62 +177,119 @@
     </header>
 
     <section>
-        <h2>队员角色分工</h2>
-        <p>点击每个角色名称以查看详情。</p>
-        <dl>
-            <dt>
-                <a href="#" onclick="showPopup('chaser')"><b>追球手</b></a>
-            </dt>
-            <dd>负责将鬼飞球投进球门得分。</dd>
-
-            <dt>
-                <a href="#" onclick="showPopup('beater')"><b>击球手</b></a>
-            </dt>
-            <dd>用球棒击打游走球以干扰对方选手。</dd>
-
-            <dt>
-                <a href="#" onclick="showPopup('keeper')"><b>守门员</b></a>
-            </dt>
-            <dd>守护球门，防止对方得分。</dd>
-
-            <dt>
-                <a href="#" onclick="showPopup('seeker')"><b>找球手</b></a>
-            </dt>
-            <dd>专注于寻找并抓住金色飞贼。</dd>
-        </dl>
+        <h2>魁地奇的起源与发展</h2>
+        <p>魁地奇起源于11世纪的“魁地沼泽”，最初的比赛形式与现代有许多不同，但其基本理念已定型。</p>
+        <p>随着<mark>飞天扫帚</mark>的普及，这项运动逐渐成为巫师世界的重要文化象征，甚至被誉为巫师们的“国民运动”。</p>
     </section>
-</div>
 
-<!-- 弹窗内容 -->
-<div id="chaser" class="popup">
-    <h3>追球手</h3>
-    <p>例如：金妮·韦斯莱，她是队伍中的核心进攻手，凭借灵活的扫帚技巧将鬼飞球投进球门得分。</p>
-    <button onclick="closePopup('chaser')">关闭</button>
-</div>
-<div id="beater" class="popup">
-    <h3>击球手</h3>
-    <p>例如：乔治·韦斯莱和弗雷德·韦斯莱，他们用游走球扰乱对方选手，为队友创造机会。</p>
-    <button onclick="closePopup('beater')">关闭</button>
-</div>
-<div id="keeper" class="popup">
-    <h3>守门员</h3>
-    <p>例如：罗恩·韦斯莱，他守护球门不被对方攻破，是防守线的最后一道屏障。</p>
-    <button onclick="closePopup('keeper')">关闭</button>
-</div>
-<div id="seeker" class="popup">
-    <h3>找球手</h3>
-    <p>例如：哈利·波特，他专注于寻找并抓住金色飞贼，是决定比赛胜负的关键人物。</p>
-    <button onclick="closePopup('seeker')">关闭</button>
-</div>
+    <section>
+        <h2>比赛规则与计分方式</h2>
+        <p>魁地奇的规则如下：</p>
+        <ol>
+            <li>比赛分为两队，每队7名队员。</li>
+            <li>通过使用<mark class="red">鬼飞球</mark>投进球门得分，每次得分10分。</li>
+            <li>比赛以找到并抓住<mark class="gold">金色飞贼</mark>为结束，被抓后获得150分。</li>
+        </ol>
+    </section>
 
-<script>
-    function showPopup(id) {
-        document.getElementById(id).style.display = "block";
-    }
-    function closePopup(id) {
-        document.getElementById(id).style.display = "none";
-    }
-</script>
+    <section>
+        <h2>队员角色分工</h2>
+        <p>可把鼠标放置在不同角色上，也可点击</p>
+        <dl>
+        <dt>
+            <a href="#" class="role" data-name="金妮·韦斯莱" data-description="金妮·韦斯莱是哈利的朋友和战友，担任过追球手，并帮助格兰芬多赢得魁地奇比赛。">
+                <b>追球手</b>
+            </a>
+            （<ruby>Chaser<rt>追球者</rt></ruby>）
+        </dt>
+        <dd>负责将鬼飞球投进球门得分。</dd>
+
+        <dt>
+            <a href="#" class="role" data-name="乔治·韦斯莱和弗雷德·韦斯莱" data-description="双胞胎兄弟，格兰芬多学院的击球手，以幽默和智慧闻名，是魁地奇比赛的关键力量。">
+                <b>击球手</b>
+            </a>
+            （<ruby>Beater<rt>击打者</rt></ruby>）
+        </dt>
+        <dd>用球棒击打游走球以干扰对方选手。</dd>
+
+        <dt>
+            <a href="#" class="role" data-name="罗恩·韦斯莱" data-description="罗恩是哈利的挚友，担任守门员时展现了他的忠诚和勇气，为团队多次化解危机。">
+                <b>守门员</b>
+            </a>
+            （<ruby>Keeper<rt>守卫者</rt></ruby>）
+        </dt>
+        <dd>守护球门，防止对方得分。</dd>
+
+        <dt>
+            <a href="#" class="role" data-name="哈利·波特" data-description="哈利是传奇的找球手，天生敏捷且机智，帮助格兰芬多赢得了无数次胜利。">
+                <b>找球手</b>
+            </a>
+            （<ruby>Seeker<rt>搜寻者</rt></ruby>）
+        </dt>
+        <dd>专注于寻找并抓住金色飞贼。</dd>
+    </dl>
+
+    <!-- 弹窗 -->
+    <div id="popup" class="popup">
+        <h3 id="popup-title"></h3>
+        <p id="popup-description"></p>
+        <div class="popup-close">
+            <button onclick="closePopup()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 绑定点击事件
+        document.querySelectorAll('.role').forEach(role => {
+            role.addEventListener('click', function (e) {
+                e.preventDefault(); // 防止默认行为
+
+                // 获取弹窗元素
+                const popup = document.getElementById('popup');
+                const title = document.getElementById('popup-title');
+                const description = document.getElementById('popup-description');
+
+                // 设置弹窗内容
+                title.textContent = this.dataset.name;
+                description.textContent = this.dataset.description;
+
+                // 显示弹窗
+                popup.style.display = 'block';
+
+                // 设置弹窗位置（根据鼠标点击位置）
+                popup.style.top = `${e.pageY}px`;
+                popup.style.left = `${e.pageX}px`;
+            });
+        });
+
+        // 关闭弹窗
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+    </section>
+
+    <section>
+        <h2>常见比赛器材</h2>
+        <ul>
+            <li><strong>飞天扫帚：</strong>所有队员的交通工具。</li>
+            <li><mark class="red"><strong style="color: red;">鬼飞球：</strong></mark>主要得分工具，需用手操作。</li>
+            <li><mark class="silver"><strong>游走球：</strong></mark>具有攻击性的球，用以打击对手。</li>
+            <li><mark class="gold"><strong style="color: #b8860b;">金色飞贼：</strong></mark>关键目标，抓住后比赛结束。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>比赛场地与设定</h2>
+        <p>魁地奇比赛场地为一个椭圆形场地，两端设有三个不同高度的圆环球门。</p>
+        <p>场地外围通常设有看台，以便观众可以观看比赛。</p>
+        <p>比赛环境可能受到天气、魔法元素影响，增加了比赛的挑战性与趣味性。</p>
+    </section>
+
+    <footer>
+        <p>2024 魁地奇| 巫师世界的经典运动</p>
+    </footer>
+</div>
 
 </body>
 </html>
