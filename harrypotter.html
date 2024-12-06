@@ -177,33 +177,55 @@
     您的浏览器不支持音频元素。
 </audio>
 
+<button id="music-toggle" style="position:fixed; top:10px; left:10px; z-index:1000; padding:10px; background:#ffd700; color:#000; border:none; border-radius:5px; cursor:pointer;">
+    开启/关闭背景音乐
+</button>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const backgroundMusic = document.getElementById("background-music");
+        const musicToggle = document.getElementById("music-toggle");
+        const videos = document.querySelectorAll("video");
 
-        // 尝试静音播放
-        const attemptAutoplay = () => {
-            backgroundMusic.muted = true; // 开启静音
-            backgroundMusic.play().then(() => {
-                backgroundMusic.muted = false; // 取消静音
-                console.log("背景音乐自动播放成功");
-            }).catch((error) => {
-                console.warn("自动播放被阻止，等待用户交互：", error);
-                // 提示用户交互
-                document.body.addEventListener("click", enableAudioOnInteraction, { once: true });
+        // 检查是否允许自动播放音频
+        const playMusic = () => {
+            backgroundMusic.play().catch(err => {
+                console.log("自动播放被阻止，等待用户交互：", err);
             });
         };
 
-        // 用户交互后开启音频
-        const enableAudioOnInteraction = () => {
-            backgroundMusic.muted = false;
-            backgroundMusic.play().catch((error) => {
-                console.error("用户交互后仍无法播放：", error);
-            });
-        };
+        // 切换背景音乐播放状态
+        musicToggle.addEventListener("click", () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+            } else {
+                backgroundMusic.pause();
+            }
+        });
 
-        // 页面加载时尝试自动播放
-        attemptAutoplay();
+        // 视频播放时暂停背景音乐
+        videos.forEach(video => {
+            video.addEventListener("play", () => {
+                if (!backgroundMusic.paused) {
+                    backgroundMusic.pause();
+                }
+            });
+
+            // 视频暂停或结束后恢复背景音乐
+            video.addEventListener("pause", () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                }
+            });
+            video.addEventListener("ended", () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                }
+            });
+        });
+
+        // 页面加载时尝试播放背景音乐
+        playMusic();
     });
 </script>
 <div class="container">
