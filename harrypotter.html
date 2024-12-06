@@ -196,77 +196,95 @@
         <h2>队员角色分工</h2>
         <p>可把鼠标放置在不同角色上，也可点击</p>
         <dl>
-        <dt>
-            <a href="#" class="role" data-name="金妮·韦斯莱" data-description="金妮·韦斯莱是哈利的朋友和战友，担任过追球手，并帮助格兰芬多赢得魁地奇比赛。">
-                <b>追球手</b>
-            </a>
-            （<ruby>Chaser<rt>追球者</rt></ruby>）
-        </dt>
-        <dd>负责将鬼飞球投进球门得分。</dd>
+    <dt><b><a href="#" title="金妮·韦斯莱：在哈利·波特系列中是韦斯莱家族的成员，出色的追球手。" onclick="showPopup('ginnie')">追球手</a></b>（<ruby>Chaser<rt>追球者</rt></ruby>）</dt>
+    <dd>负责将鬼飞球投进球门得分。</dd>
 
-        <dt>
-            <a href="#" class="role" data-name="乔治·韦斯莱和弗雷德·韦斯莱" data-description="双胞胎兄弟，格兰芬多学院的击球手，以幽默和智慧闻名，是魁地奇比赛的关键力量。">
-                <b>击球手</b>
-            </a>
-            （<ruby>Beater<rt>击打者</rt></ruby>）
-        </dt>
-        <dd>用球棒击打游走球以干扰对方选手。</dd>
+    <dt><b><a href="#" title="乔治·韦斯莱和弗雷德·韦斯莱：双胞胎兄弟，出色的击球手，擅长使用游走球干扰对方。" onclick="showPopup('georgeFred')">击球手</a></b>（<ruby>Beater<rt>击打者</rt></ruby>）</dt>
+    <dd>用球棒击打游走球以干扰对方选手。</dd>
 
-        <dt>
-            <a href="#" class="role" data-name="罗恩·韦斯莱" data-description="罗恩是哈利的挚友，担任守门员时展现了他的忠诚和勇气，为团队多次化解危机。">
-                <b>守门员</b>
-            </a>
-            （<ruby>Keeper<rt>守卫者</rt></ruby>）
-        </dt>
-        <dd>守护球门，防止对方得分。</dd>
+    <dt><b><a href="#" title="罗恩·韦斯莱：哈利的朋友和室友，成为了守门员并保卫球门。" onclick="showPopup('ron')">守门员</a></b>（<ruby>Keeper<rt>守卫者</rt></ruby>）</dt>
+    <dd>守护球门，防止对方得分。</dd>
 
-        <dt>
-            <a href="#" class="role" data-name="哈利·波特" data-description="哈利是传奇的找球手，天生敏捷且机智，帮助格兰芬多赢得了无数次胜利。">
-                <b>找球手</b>
-            </a>
-            （<ruby>Seeker<rt>搜寻者</rt></ruby>）
-        </dt>
-        <dd>专注于寻找并抓住金色飞贼。</dd>
-    </dl>
+    <dt><b><a href="#" title="哈利·波特：在哈利·波特系列中是找球手，出色的追踪者，负责寻找并抓住金色飞贼。" onclick="showPopup('harry')">找球手</a></b>（<ruby>Seeker<rt>搜寻者</rt></ruby>）</dt>
+    <dd>专注于寻找并抓住金色飞贼。</dd>
+</dl>
 
-    <!-- 弹窗 -->
-    <div id="popup" class="popup">
-        <h3 id="popup-title"></h3>
-        <p id="popup-description"></p>
-        <div class="popup-close">
-            <button onclick="closePopup()">关闭</button>
-        </div>
+<!-- 弹窗的HTML -->
+<div id="popup" class="popup" style="display:none;">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <div id="popup-text"></div>
     </div>
+</div>
 
-    <script>
-        // 绑定点击事件
-        document.querySelectorAll('.role').forEach(role => {
-            role.addEventListener('click', function (e) {
-                e.preventDefault(); // 防止默认行为
+<!-- 弹窗样式 -->
+<style>
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
 
-                // 获取弹窗元素
-                const popup = document.getElementById('popup');
-                const title = document.getElementById('popup-title');
-                const description = document.getElementById('popup-description');
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 600px;
+        color: black;
+    }
 
-                // 设置弹窗内容
-                title.textContent = this.dataset.name;
-                description.textContent = this.dataset.description;
+    .close {
+        font-size: 30px;
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
 
-                // 显示弹窗
-                popup.style.display = 'block';
+    .close:hover {
+        color: black;
+    }
+</style>
 
-                // 设置弹窗位置（根据鼠标点击位置）
-                popup.style.top = `${e.pageY}px`;
-                popup.style.left = `${e.pageX}px`;
-            });
-        });
-
-        // 关闭弹窗
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
+<!-- 弹窗的JavaScript -->
+<script>
+    function showPopup(role) {
+        var popupText = '';
+        switch(role) {
+            case 'ginnie':
+                popupText = '<h2>金妮·韦斯莱</h2><p>金妮是韦斯莱家族的成员，出色的追球手。在哈利·波特系列中，她是哈利的朋友和妻子。</p>';
+                break;
+            case 'georgeFred':
+                popupText = '<h2>乔治·韦斯莱和弗雷德·韦斯莱</h2><p>双胞胎兄弟，出色的击球手，擅长使用游走球干扰对方。</p>';
+                break;
+            case 'ron':
+                popupText = '<h2>罗恩·韦斯莱</h2><p>罗恩是哈利的朋友和室友，在魁地奇比赛中担任守门员，防守对方的进攻。</p>';
+                break;
+            case 'harry':
+                popupText = '<h2>哈利·波特</h2><p>哈利是霍格沃茨的学生，是魁地奇比赛中的找球手，出色的追踪者，负责寻找并抓住金色飞贼。</p>';
+                break;
+            default:
+                popupText = '<h2>未知角色</h2><p>没有相关信息。</p>';
         }
-    </script>
+        document.getElementById('popup-text').innerHTML = popupText;
+        document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+</script>
     </section>
 
     <section>
