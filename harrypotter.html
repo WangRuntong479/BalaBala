@@ -185,7 +185,6 @@
     document.addEventListener("DOMContentLoaded", function () {
         const backgroundMusic = document.getElementById("background-music");
         const musicToggle = document.getElementById("music-toggle");
-        const videos = document.querySelectorAll("video");
 
         // 检查是否允许自动播放音频
         const playMusic = () => {
@@ -203,31 +202,46 @@
             }
         });
 
-        // 视频播放时暂停背景音乐
-        videos.forEach(video => {
-            video.addEventListener("play", () => {
-                if (!backgroundMusic.paused) {
-                    backgroundMusic.pause();
-                }
-            });
+        // 检测所有视频元素（包括嵌套或弹窗内的）
+        const checkAndPauseMusicForVideos = () => {
+            const videos = document.querySelectorAll("video");
 
-            // 视频暂停或结束后恢复背景音乐
-            video.addEventListener("pause", () => {
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                }
+            videos.forEach(video => {
+                // 视频播放时暂停背景音乐
+                video.addEventListener("play", () => {
+                    if (!backgroundMusic.paused) {
+                        backgroundMusic.pause();
+                    }
+                });
+
+                // 视频暂停或结束后恢复背景音乐
+                video.addEventListener("pause", () => {
+                    if (backgroundMusic.paused) {
+                        backgroundMusic.play();
+                    }
+                });
+
+                video.addEventListener("ended", () => {
+                    if (backgroundMusic.paused) {
+                        backgroundMusic.play();
+                    }
+                });
             });
-            video.addEventListener("ended", () => {
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                }
-            });
-        });
+        };
+
+        // 初始加载时检查页面上的所有视频
+        checkAndPauseMusicForVideos();
+
+        // 当新的内容（例如弹窗）加载时，检查其中的所有视频
+        new MutationObserver(() => {
+            checkAndPauseMusicForVideos();
+        }).observe(document.body, { childList: true, subtree: true });
 
         // 页面加载时尝试播放背景音乐
         playMusic();
     });
 </script>
+
 <div class="container">
     <header>
         <h1>魁地奇比赛介绍</h1>
