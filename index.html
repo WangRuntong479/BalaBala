@@ -25,10 +25,13 @@
             align-items: center;
             transition: background-color 0.3s ease;
             background-color: #FFEBF2;  /* 初始为淡粉色 */
+            position: relative;
         }
 
         h1 {
             color: #333;
+            position: absolute;
+            z-index: 1;
         }
     </style>
 </head>
@@ -42,23 +45,41 @@
 
         // 监听触摸开始事件
         touchArea.addEventListener('touchstart', (event) => {
-            touchArea.style.backgroundColor = '#F2FFEB';  // 触摸时背景色为淡绿色
+            event.preventDefault(); // 防止触摸事件的默认行为
+            const touch = event.touches[0];  // 获取触摸点
+            updateBackgroundColor(touch.clientX, touch.clientY, '#F2FFEB');  // 触摸开始时背景色为淡绿色
         });
 
         // 监听触摸移动事件
         touchArea.addEventListener('touchmove', (event) => {
-            touchArea.style.backgroundColor = '#F2FFEB';  // 触摸移动时背景色为淡绿色
+            event.preventDefault(); // 防止触摸事件的默认行为
+            const touch = event.touches[0];  // 获取触摸点
+            updateBackgroundColor(touch.clientX, touch.clientY, '#F2FFEB');  // 触摸移动时背景色为淡绿色
         });
 
         // 监听触摸结束事件
         touchArea.addEventListener('touchend', (event) => {
-            touchArea.style.backgroundColor = '#FFFBF2';  // 离开时背景色为淡黄色
+            event.preventDefault(); // 防止触摸事件的默认行为
+            updateBackgroundColor(null, null, '#FFFBF2');  // 离开时背景色为淡黄色
         });
 
         // 监听触摸取消事件
         touchArea.addEventListener('touchcancel', (event) => {
-            touchArea.style.backgroundColor = '#FFFBF2';  // 离开时背景色为淡黄色
+            event.preventDefault(); // 防止触摸事件的默认行为
+            updateBackgroundColor(null, null, '#FFFBF2');  // 离开时背景色为淡黄色
         });
+
+        // 更新背景色函数
+        function updateBackgroundColor(x, y, color) {
+            if (x !== null && y !== null) {
+                // 当触摸点存在时，动态更新背景颜色并且根据触摸点位置设置背景颜色
+                touchArea.style.backgroundColor = color;
+                touchArea.style.backgroundPosition = `${x}px ${y}px`;
+            } else {
+                // 当触摸离开时，恢复到淡黄色背景
+                touchArea.style.backgroundColor = color;
+            }
+        }
     </script>
 </body>
 </html>
