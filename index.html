@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>触摸背景颜色变化</title>
     <style>
-        /* 页面和整体布局 */
+        /* 初始化页面样式 */
         body, html {
             margin: 0;
             padding: 0;
@@ -14,26 +14,22 @@
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
-            background-color: #FFEBF2; /* 初始为淡粉色 */
-            cursor: pointer; /* 设置光标为手形 */
+            background-color: #FFEBF2;  /* 初始背景为淡粉色 */
+            cursor: pointer;  /* 小手指光标 */
         }
 
-        /* 设置触摸区域 */
         .touch-area {
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
-            background-color: #FFEBF2;  /* 初始背景色为淡粉色 */
             transition: background-color 0.3s ease;
+            background-color: #FFEBF2;  /* 初始背景为淡粉色 */
         }
 
         h1 {
             color: #333;
-            position: absolute;
-            z-index: 1;
         }
     </style>
 </head>
@@ -48,25 +44,28 @@
         // 监听触摸开始事件
         touchArea.addEventListener('touchstart', (event) => {
             event.preventDefault(); // 防止触摸事件的默认行为
-            touchArea.style.backgroundColor = '#A8F2A8';  // 触摸开始时背景色为淡绿色
+            document.body.style.cursor = 'pointer';  // 设置触摸时小手形状
+            touchArea.style.backgroundColor = '#D9F7E3';  // 背景变为淡绿色
         });
 
         // 监听触摸移动事件
         touchArea.addEventListener('touchmove', (event) => {
             event.preventDefault(); // 防止触摸事件的默认行为
-            touchArea.style.backgroundColor = '#FFF2A8';  // 触摸移动时背景色为黄色
+            touchArea.style.backgroundColor = '#FFEB89';  // 触摸移动时背景为黄色
         });
 
         // 监听触摸结束事件
         touchArea.addEventListener('touchend', (event) => {
             event.preventDefault(); // 防止触摸事件的默认行为
-            touchArea.style.backgroundColor = '#A8D8F2';  // 离开时背景色为淡蓝色
+            document.body.style.cursor = 'default';  // 恢复默认光标
+            touchArea.style.backgroundColor = '#A9D9FF';  // 离开时背景变为淡蓝色
         });
 
         // 监听触摸取消事件
         touchArea.addEventListener('touchcancel', (event) => {
             event.preventDefault(); // 防止触摸事件的默认行为
-            touchArea.style.backgroundColor = '#A8D8F2';  // 离开时背景色为淡蓝色
+            document.body.style.cursor = 'default';  // 恢复默认光标
+            touchArea.style.backgroundColor = '#A9D9FF';  // 离开时背景变为淡蓝色
         });
     </script>
 </body>
