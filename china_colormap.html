@@ -2,88 +2,56 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>水墨风格中国地图</title>
-    <script src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
-    <script src="https://assets.pyecharts.org/assets/v5/maps/china.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国地图互动展示</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
     <style>
         body {
-            background-color: #f5f5f5; /* 仿宣纸底色 */
-            display: flex;
-            justify-content: center; /* 水平居中 */
-            align-items: center; /* 垂直居中 */
-            height: 100vh;
+            font-family: Arial, sans-serif;
             margin: 0;
-            flex-direction: column;
+            padding: 0;
+            background-color: #f4f0e0;
         }
         #china_map {
-            width: 1500px;  /* 地图更大 */
-            height: 1000px; /* 地图更高 */
-            border: 10px solid #ccc;
-            box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
-            margin-top: 20px; /* 地图距离标题有一定间距 */
+            height: 100vh;
         }
-        h1 {
-            font-family: 'Georgia', serif;
-            font-size: 32px;
-            color: #333;
-            margin: 0;
-            padding: 20px 0;
-            text-align: center;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .keyword-box {
-            margin-top: 20px;
-            font-size: 20px;
-            color: #333;
-            font-weight: bold;
-            white-space: pre-line; /* 保持换行 */
-        }
-        /* 弹窗样式 */
         .modal {
-            display: none; /* 默认隐藏 */
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 60%;
             background-color: white;
-            padding: 20px;
             border-radius: 10px;
+            padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            max-width: 600px;
-            width: 90%;
         }
-        .modal-content {
-            display: flex;
-            align-items: center;
-        }
-        .modal-text {
-            flex: 1;
-            font-size: 18px;
-            color: #333;
-            white-space: pre-line; /* 保持换行 */
-            margin-right: 20px;
-        }
-        .modal-image {
-            flex: 1;
-            text-align: right;
-        }
-        .modal-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+        .modal-header {
             font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .modal-body {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .modal-footer {
+            text-align: right;
+            margin-top: 15px;
+        }
+        .close-btn {
             cursor: pointer;
-            color: #333;
+            padding: 8px 16px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
         }
         .overlay {
-            display: none; /* 默认隐藏 */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -95,197 +63,138 @@
     </style>
 </head>
 <body>
-    <h1>中国各省关键词</h1>
-    <div id="china_map"></div>
-    <!-- 弹窗结构 -->
-    <div id="modal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <div class="modal-content">
-            <div class="modal-text" id="modal-text"></div>
-            <div class="modal-image" id="modal-image"></div>
-        </div>
+
+<div id="china_map"></div>
+
+<!-- 弹窗 -->
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="modal">
+    <div class="modal-header">省份信息</div>
+    <div class="modal-body" id="modal-text"></div>
+    <div class="modal-footer">
+        <button class="close-btn" onclick="closeModal()">关闭</button>
     </div>
-    <div id="overlay" class="overlay"></div>
-    <script>
-        var chart = echarts.init(document.getElementById('china_map'));
+</div>
 
-        var provinceColors = {
-            "新疆维吾尔自治区": "rgba(255, 99, 132, 0.6)", "甘肃省": "rgba(255, 159, 64, 0.6)", "北京市": "rgba(255, 205, 86, 0.6)",
-            "江苏省": "rgba(75, 192, 192, 0.6)", "广西省": "rgba(144, 238, 144, 0.6)", "江西省": "rgba(153, 102, 255, 0.6)",
-            "台湾省": "rgba(201, 203, 207, 0.6)", "安徽省": "rgba(255, 87, 34, 0.6)", "内蒙古自治区": "rgba(0, 188, 212, 0.6)",
-            "黑龙江省": "rgba(63, 81, 181, 0.6)", "天津市": "rgba(255, 235, 59, 0.6)", "山西省": "rgba(76, 175, 80, 0.6)",
-            "广东省": "rgba(139, 195, 74, 0.6)", "四川省": "rgba(121, 85, 72, 0.6)", "西藏自治区": "rgba(144, 238, 144, 0.6)",
-            "云南省": "rgba(255, 193, 7, 0.6)", "浙江省": "rgba(0, 150, 136, 0.6)", "湖北省": "rgba(103, 58, 183, 0.6)",
-            "辽宁省": "rgba(33, 150, 243, 0.6)", "山东省": "rgba(156, 39, 176, 0.6)", "海南省": "rgba(255, 99, 71, 0.6)",
-            "澳门特别行政区": "rgba(255, 218, 185, 0.6)", "河北省": "rgba(255, 165, 0, 0.6)", "福建省": "rgba(0, 191, 255, 0.6)",
-            "青海省": "rgba(138, 43, 226, 0.6)", "陕西省": "rgba(50, 205, 50, 0.6)", "贵州省": "rgba(255, 140, 0, 0.6)",
-            "河南省": "rgba(70, 130, 180, 0.6)", "重庆市": "rgba(205, 92, 92, 0.6)", "宁夏回族自治区": "rgba(144, 238, 144, 0.6)",
-            "吉林省": "rgba(255, 182, 193, 0.6)", "湖南省": "rgba(34, 139, 34, 0.6)", "香港特别行政区": "rgba(233, 150, 122, 0.6)",
-            "上海市": "rgba(173, 216, 230, 0.6)"
-        };
+<script>
+    var chart = echarts.init(document.getElementById('china_map'));
 
-        var provinceKeywords = {
-    "北京市": `• 颐和园\n• 北平\n• 长城\n• 天坛\n• 故宫\n• 紫禁城\n• 景山公园\n• 野鸭湖\n• 顺祝冬安`,
-    "天津市": `• 海鸥\n• 蓟州\n• 盘山\n• 小白楼\n• 海河\n• 欧式\n• 滨海\n• 津门\n• 金色\n• 天大\n• 天际线\n• 天津夜景`,
-    "河北省": `• 正定\n• 苍岩山\n• 福庆寺\n• 霍格沃茨\n• 黑神话\n• 民宿\n• 石家庄雪景\n• 广惠寺华塔\n• 滹沱河\n• 平山西柏坡\n• 石家庄水上公园\n• 孙颖莎故乡\n• 石家庄步行街`,
-    "山西省": `• 太原\n• 晋祠\n• 双塔寺\n• 迎泽公园\n• 山西古建`,
-    "内蒙古自治区": `• 呼和浩特\n• 大召寺\n• 红石崖\n• 内蒙古草原\n• 千岛湖`,
-    "辽宁省": `• 沈阳\n• 沈阳故宫\n• 北陵公园\n• 盛京\n• 浑河`,
-    "吉林省": `• 长春\n• 长月潭\n• 长白山\n• 雕塑园`,
-    "黑龙江省": `• 哈尔滨\n• 松花江\n• 冰雪大世界\n• 圣索菲亚大教堂\n• 中央大街`,
-    "江苏省": `• 南京\n• 钟山风景区\n• 玄武湖\n• 南京总统府\n• 明孝陵\n• 燕雀湖\n• 颐和路\n• 古都\n• 阅江楼\n• 鸡鸣寺`,
-    "浙江省": `• 杭州\n• 西湖\n• 青山湖\n• 永福寺\n• 九溪\n• 桐庐\n• 钱江新城\n• 西子湖畔\n• 北山街\n• 江南`,
-    "安徽省": `• 合肥\n• 巢湖\n• 徽园\n• 天鹅湖\n• 蜀山区\n• 逍遥津\n• 红星路\n• 包公园\n• 三河古镇\n• 庐州\n• 明珠码头\n• 日落\n• 夜景\n• 动漫场景\n• 大草原\n• 皖南川\n• 湖景`,
-    "福建省": `• 福州\n• 悬空寺\n• 鼓山\n• 三坊七巷\n• 烟台山\n• 爱心树\n• 秋天\n• 平潭\n• 福道福\n• 永泰\n• 黄昏\n• 泉州\n• 西禅寺\n• 上杭\n• 夜景\n• 城市节奏\n• 人文风光`,
-    "江西省": `• 南昌\n• 摩天轮\n• 晚霞\n• 江边\n• 滕王阁\n• 无人机\n• 花海\n• 老城区\n• 文泉禅寺\n• 八一公园\n• 红色旅游\n• 朝阳大桥\n• 美术馆\n• 革命情怀\n• 经典景点\n• 日夜对比\n• 星摩天轮`,
-    "山东省": `• 济南\n• 泉城\n• 老舍\n• 柳絮\n• 趵突泉\n• 冬天雪景\n• 虎泉阁\n• 金箔\n• 春和景明\n• 黑神话悟空\n• 五龙潭\n• 大明湖\n• 诗意邂逅\n• 李清照\n• 泉水甲天下\n• 灵岩寺\n• 珍珠泉\n• 九山\n• 山色湖景\n• 济南的冬天`,
-    "河南省": `• 郑州\n• 二七广场\n• 北龙湖\n• 二七塔\n• 樱花盛景\n• 龙子湖\n• 郑东万米高空\n• 金融岛\n• 西流湖公园\n• 绿野仙踪\n• 贾鲁河公园\n• 集齐三座塔\n• 冬季雪景\n• 绿杉树\n• 金光穿洞\n• 夏日傍晚`,
-    "湖北省": `• 武汉\n• 东湖\n• 解放公园\n• 樱花\n• 古德寺\n• 武汉三镇\n• 暴走\n• 九省通衢\n• 武汉日漫场景\n• 武汉岁月\n• 暴走拍摄\n• 蓝调时刻`,
-    "湖南省": `• 长沙\n• 夜景\n• 橘子洲\n• 岳麓山\n• 桃子湖\n• 梅溪湖\n• 高密度城市\n• 长沙版千寻油屋\n• 山水景观\n• 幸福开福寺`,
-    "广东省": `• 广州\n• 花城\n• 紫花风铃木\n• 白云山红叶\n• 越秀公园\n• 增城白水寨\n• 沙面博物馆\n• 世贸晚霞\n• 历史与文化\n• 春节活动\n• 徒步旅行\n• 巴黎出站`,
-    "广西省": `• 南宁\n• 园博园\n• 青秀山\n• 大明山\n• 火秀演出\n• 南湖公园\n• 水漾市集\n• 秋高气爽\n• 烟花浪漫\n• 鱼花巷\n• 小镇风情\n• 雨仙境\n• 城市天际线\n• 欧洲风情小镇\n• 低估的边陲城市`,
-    "海南省": `• 海口\n• 火山七十二洞\n• 骑楼老街\n• 西海岸\n• 银滩公园\n• 日落温柔\n• 海口湾\n• 冬季阳光\n• 白沙门\n• 热带滨海城市魅力`,
-    "重庆市": `• 洪崖洞\n• 重庆夜景\n• 山茶花\n• 海石公园\n• 秋天风景\n• 重庆的三峡\n• 故事与镜头\n• 重庆重山重水\n• 重庆山城风景与民宿`,
-    "四川省": `• 成都\n• 灯会\n• 都江堰与蓝色景色\n• 春熙路\n• 杜甫草堂的中式美学\n• 成都地铁直达新西兰现实版漫画岛\n• 文殊院的古韵建筑\n• 成都与贡嘎山的海市蜃楼\n• 温泉酒店与森林放松之旅\n• 天台山的秘境之旅\n• 都江堰熊猫谷\n• 青城山临溪山\n• 土拨鼠俱乐部\n• 三星堆`,
-    "贵州省": `• 贵阳\n• 香火岩瀑布\n• 日照白宫\n• 春天美景\n• 灯会过年氛围\n• 隐秘古村\n• 青岩古镇宣传\n• 华呈木舍\n• 地底银河与星空体验\n• 花溪\n• 大十字的第一视角美景\n• 明月山羊狮慕温泉\n• 武陵山裂谷`,
-    "云南省": `• 昆明\n• 捞鱼河日落\n• 蓝花楹浪漫花期\n• 牯牛酱\n• 滇池\n• 冬季樱花\n• 水边芦苇落日\n• 翠湖与冬季浪漫\n• 万达双塔\n• 翠湖浪漫`,
-    "西藏自治区": `• 拉萨人间四月天\n• 布达拉宫\n• 萨普神山\n• 宿命式孤独感\n• 震撼与难以形容的美丽\n• 悬崖圣地扎叶巴寺\n• 东方美学\n• 沉浸式奇幻\n• 天游\n• 纳木错湖\n• 日光城\n• 南山公园\n• 青藏高原火车\n• 狮林寺\n• 钟声与经幡飘扬\n• 缺氧`,
-    "陕西省": `• 西安夜游\n• 大雁塔\n• 钟楼\n• 古城墙夜景\n• 七彩烟花\n• 秦岭原始森林\n• 千年古都\n• 日落\n• 秋景\n• 雪景\n• 长安回望\n• 五台云海\n• 青龙寺赏樱花\n• 历史魅力`,
-    "甘肃省": `• 兰州日落\n• 黄河水清澈\n• 冬天雪景\n• 黄河石林\n• 水墨丹霞\n• 兰州工业风\n• 大西北粗犷浪漫\n• 白天曼哈顿\n• 三河口天鹅滩\n• 兰州大学\n• 祁连山脉\n• 冬季橘子海\n• 兰州老街\n• 彩陶公园\n• 敦煌\n• 张掖\n• 赛博朋克夜景`,
-    "青海省": `• 西宁夏都\n• 青海湖\n• 文艺街道\n• 人民公园滑冰\n• 茶卡盐湖\n• 格尔木西宁列车\n• 塔尔寺\n• 汉藏融合古建筑\n• 拉脊山\n• 日月山\n• 明珠塔景点\n• 西宁下雪`,
-    "宁夏回族自治区": `• 银川大雪\n• 西夏王陵\n• 贺兰山岩画\n• 贺兰山轻徒步\n• 丹霞河谷\n• 银川老城浪漫\n• 贺兰山情书\n• 国道风景\n• 五湖穿越\n• 贺兰山四季\n• 腾格里沙漠\n• 塞上江南\n• 贺兰山大风\n• 银川雪景`,
-    "新疆维吾尔自治区": `• 乌鲁木齐\n• 冬日人间仙境\n• 雪后博格达\n• 水磨沟公园\n• 天山山脉\n• 伊犁阿勒泰\n• 那拉提\n• 冬季徒步\n• 浪漫极水晶球\n• 天山大峡谷\n• 庙尔沟骑马\n• 云端日出`,
-    "台湾省": `• 台北绝美日落\n• 碧山巖黄昏全景\n• 泡温泉\n• 吃拉面\n• 文艺生活\n• 黄昏人海\n• 台湾八景\n• 象山峰夜景\n• 车站段墙上的文字\n• 故宫博物院\n• 老蒋搬的珍宝\n• 台北秋季\n• 烟雨弥漫老街\n• 中正纪念堂`,
-    "香港特别行政区": `• 追星成功\n• 万能开局四步杀\n• 旷野气息`,
-    "澳门特别行政区": `• 堵爆`,
-    "上海市"：`• 外滩\n• 魔都\n• 繁华\n• 现代\n• 陆家嘴\n• 科幻\n• 震撼`
-};
+    // 省份颜色映射
+    var provinceColors = {
+        "新疆维吾尔自治区": "rgba(255, 99, 132, 0.6)", "甘肃省": "rgba(255, 159, 64, 0.6)", "北京市": "rgba(255, 205, 86, 0.6)",
+        "江苏省": "rgba(75, 192, 192, 0.6)", "广西省": "rgba(144, 238, 144, 0.6)", "江西省": "rgba(153, 102, 255, 0.6)",
+        "台湾省": "rgba(201, 203, 207, 0.6)", "安徽省": "rgba(255, 87, 34, 0.6)", "内蒙古自治区": "rgba(0, 188, 212, 0.6)",
+        "黑龙江省": "rgba(63, 81, 181, 0.6)", "天津市": "rgba(255, 235, 59, 0.6)", "山西省": "rgba(76, 175, 80, 0.6)",
+        "广东省": "rgba(139, 195, 74, 0.6)", "四川省": "rgba(121, 85, 72, 0.6)", "西藏自治区": "rgba(144, 238, 144, 0.6)",
+        "云南省": "rgba(255, 193, 7, 0.6)", "浙江省": "rgba(0, 150, 136, 0.6)", "湖北省": "rgba(103, 58, 183, 0.6)",
+        "辽宁省": "rgba(33, 150, 243, 0.6)", "山东省": "rgba(156, 39, 176, 0.6)", "海南省": "rgba(255, 99, 71, 0.6)",
+        "澳门特别行政区": "rgba(255, 218, 185, 0.6)", "河北省": "rgba(255, 165, 0, 0.6)", "福建省": "rgba(0, 191, 255, 0.6)",
+        "青海省": "rgba(138, 43, 226, 0.6)", "陕西省": "rgba(50, 205, 50, 0.6)", "贵州省": "rgba(255, 140, 0, 0.6)",
+        "河南省": "rgba(70, 130, 180, 0.6)", "重庆市": "rgba(205, 92, 92, 0.6)", "宁夏回族自治区": "rgba(144, 238, 144, 0.6)",
+        "吉林省": "rgba(255, 182, 193, 0.6)", "湖南省": "rgba(34, 139, 34, 0.6)", "香港特别行政区": "rgba(233, 150, 122, 0.6)",
+        "上海市": "rgba(173, 216, 230, 0.6)"
+    };
 
-        var provinceImages = {
-            "新疆维吾尔自治区": "乌鲁木齐_img_12.jpg",
-            "甘肃省": "兰州_img_26.jpg",
-            "北京市": "北京_img_12.jpg",
-            "江苏省": "南京_img_37.jpg",
-            "广西省": "南宁_img_4.jpg",
-            "江西省": "南昌_img_9.jpg",
-            "台湾省": "台北_img_3.jpg",
-            "安徽省": "合肥_img_24.jpg",
-            "内蒙古自治区": "呼和浩特_img_43.jpg",
-            "黑龙江省": "哈尔滨_img_11.jpg",
-            "天津市": "天津_img_17.jpg",
-            "山西省": "太原_img_10.jpg",
-            "广东省": "广州_img_32.jpg",
-            "四川省": "成都_img_12.jpg",
-            "西藏自治区": "拉萨_img_27.jpg",
-            "云南省": "昆明_img_19.jpg",
-            "浙江省": "杭州_img_19.jpg",
-            "湖北省": "武汉_img_33.jpg",
-            "辽宁省": "沈阳_img_10.jpg",
-            "山东省": "济南_img_12.jpg",
-            "海南省": "海口_img_12.jpg",
-            "澳门特别行政区": "澳门_img_16.jpg",
-            "河北省": "石家庄_img_26.jpg",
-            "福建省": "福州_img_36.jpg",
-            "青海省": "西宁_img_18.jpg",
-            "陕西省": "西安_img_2.jpg",
-            "贵州省": "贵阳_img_20.jpg",
-            "河南省": "郑州_img_6.jpg",
-            "重庆市": "重庆_img_9.jpg",
-            "宁夏回族自治区": "银川_img_30.jpg",
-            "吉林省": "长春_img_11.jpg",
-            "湖南省": "长沙_img_19.jpg",
-            "香港特别行政区": "香港_img_17.jpg",
-            "上海市": "上海.jpg"
-        };
+    // 省份关键词
+    var provinceKeywords = {
+        "北京市": `• 颐和园\n• 北平\n• 长城\n• 天坛\n• 故宫\n• 紫禁城\n• 景山公园\n• 野鸭湖\n• 顺祝冬安`,
+        "天津市": `• 海鸥\n• 蓟州\n• 盘山\n• 小白楼\n• 海河\n• 欧式\n• 滨海\n• 津门\n• 金色\n• 天大\n• 天际线\n• 天津夜景`,
+        "河北省": `• 正定\n• 苍岩山\n• 福庆寺\n• 霍格沃茨\n• 黑神话\n• 民宿\n• 石家庄雪景\n• 广惠寺华塔\n• 滹沱河\n• 平山西柏坡\n• 石家庄水上公园\n• 孙颖莎故乡\n• 石家庄步行街`,
+        "山西省": `• 太原\n• 晋祠\n• 双塔寺\n• 迎泽公园\n• 山西古建\n• 小河口\n• 普陀寺\n• 五台山\n• 太原夜景\n• 晋中\n• 恒山`,
+        "内蒙古自治区": `• 呼和浩特\n• 大召寺\n• 红石崖\n• 内蒙古草原\n• 千岛湖\n• 额尔古纳河\n• 呼伦贝尔草原\n• 莫尔道嘎\n• 根河湿地`,
+        "辽宁省": `• 沈阳\n• 沈阳故宫\n• 北陵公园\n• 盛京\n• 浑河\n• 大连\n• 大连海滩\n• 辽宁温泉\n• 本溪\n• 九龙山`,
+        "吉林省": `• 长春\n• 长月潭\n• 长白山\n• 雕塑园\n• 向阳湖\n• 延边\n• 吉林湿地\n• 太阳岛\n• 故宫博物院吉林分馆\n• 白山`,
+        "黑龙江省": `• 哈尔滨\n• 松花江\n• 冰雪大世界\n• 圣索菲亚大教堂\n• 中央大街\n• 漠河\n• 齐齐哈尔\n• 大庆油田\n• 双鸭山`,
+        "江苏省": `• 南京\n• 钟山风景区\n• 玄武湖\n• 南京总统府\n• 明孝陵\n• 燕雀湖\n• 颐和路\n• 古都\n• 阅江楼\n• 鸡鸣寺`,
+        "浙江省": `• 杭州\n• 西湖\n• 龙井茶\n• 鼠标亭\n• 绍兴\n• 王府井\n• 俞家村\n• 义乌国际商贸城\n• 余姚`,
+        "广东省": `• 广州\n• 珠江新城\n• 白云山\n• 南海\n• 广州塔\n• 深圳\n• 深圳湾\n• 深圳大梅沙海滨公园\n• 佛山`,
+        "广西省": `• 南宁\n• 桂林山水\n• 漓江\n• 阳朔\n• 南宁市夜景\n• 北海\n• 东兴\n• 龙脊梯田\n• 龙潭大峡谷`,
+        "福建省": `• 厦门\n• 鼓浪屿\n• 南普陀寺\n• 细柳塘\n• 三坊七巷\n• 龙岩\n• 武夷山\n• 泉州\n• 莆田`,
+        "山东省": `• 济南\n• 大明湖\n• 泉水\n• 泰山\n• 烟台\n• 青岛\n• 日照\n• 山东民歌\n• 胶东半岛\n• 烟台山`,
+        "海南省": `• 三亚\n• 天涯海角\n• 大东海\n• 亚龙湾\n• 南海\n• 海南岛\n• 热带雨林\n• 螺旋海滩`,
+        "四川省": `• 成都\n• 锦里\n• 成都大熊猫繁育研究基地\n• 都江堰\n• 青城山\n• 乐山大佛\n• 九寨沟\n• 峨眉山`,
+        "陕西省": `• 西安\n• 兵马俑\n• 大雁塔\n• 华清池\n• 西安钟楼\n• 华山\n• 延安\n• 黄河`,
+        "重庆市": `• 重庆市区\n• 解放碑\n• 红岩村\n• 朝天门\n• 长江夜景\n• 武隆喀斯特\n• 云阳\n• 黔江`,
+        "云南省": `• 昆明\n• 石林\n• 大观楼\n• 西双版纳\n• 丽江古城\n• 大理\n• 茶马古道\n• 火把节`,
+        "贵州省": `• 贵阳\n• 黄果树瀑布\n• 张家界\n• 陡坡头\n• 狼山口瀑布\n• 宋庆龄故居`,
+        "甘肃省": `• 兰州\n• 白银\n• 武威\n• 敦煌\n• 黄河石林\n• 甘南藏区`
+    };
+    
+    // 基本省份配置
+    var provincesData = [
+        {name: '北京市', value: 10},
+        {name: '天津市', value: 10},
+        {name: '河北省', value: 10},
+        {name: '山西省', value: 10},
+        {name: '内蒙古自治区', value: 10},
+        {name: '辽宁省', value: 10},
+        {name: '吉林省', value: 10},
+        {name: '黑龙江省', value: 10},
+        {name: '江苏省', value: 10},
+        {name: '浙江省', value: 10},
+        {name: '广东省', value: 10},
+        {name: '广西省', value: 10},
+        {name: '福建省', value: 10},
+        {name: '山东省', value: 10},
+        {name: '海南省', value: 10},
+        {name: '四川省', value: 10},
+        {name: '陕西省', value: 10},
+        {name: '重庆市', value: 10},
+        {name: '云南省', value: 10},
+        {name: '贵州省', value: 10},
+        {name: '甘肃省', value: 10}
+    ];
 
-        var data = Object.keys(provinceColors).map(name => ({
-            name: name,
-            itemStyle: { areaColor: provinceColors[name] }
-        }));
-
-        var option = {
-            backgroundColor: "#f5f5f5", // 仿宣纸色
-            tooltip: {
-                trigger: 'item',
-                formatter: '{b}',
-                backgroundColor: 'rgba(50, 50, 50, 0.8)',
-                textStyle: { color: '#fff' }
+    var option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: function(params) {
+                return params.name;
+            }
+        },
+        visualMap: {
+            min: 0,
+            max: 10,
+            inRange: {
+                color: ['#ffeb3b', '#ff3d00']
             },
-            geo: {
-                map: 'china',
-                zoom: 1.2,  // 放大比例
-                roam: true,  // 允许缩放和平移
-                itemStyle: {
-                    areaColor: "#e0e0e0",
-                    borderColor: "#8c8c8c",
-                    borderWidth: 1.5,
-                    shadowBlur: 20,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+            show: false
+        },
+        series: [{
+            name: '中国省份',
+            type: 'map',
+            mapType: 'china',
+            roam: true,
+            itemStyle: {
+                normal: {
+                    areaColor: '#b0e0e6',
+                    borderColor: '#ffffff',
+                    borderWidth: 1
                 },
                 emphasis: {
-                    itemStyle: {
-                        areaColor: "rgba(255, 215, 0, 0.8)" // 高亮颜色
-                    }
+                    areaColor: '#ffaf00'
                 }
             },
-            series: [
-                {
-                    type: 'map',
-                    map: 'china',
-                    roam: true,
-                    zoom: 1.2,
-                    label: {
-                        show: true,
-                        color: '#333',
-                        fontSize: 14,
-                        fontWeight: 'bold'
-                    },
-                    itemStyle: {
-                        borderColor: '#444',
-                        borderWidth: 1
-                    },
-                    emphasis: {
-                        itemStyle: {
-                            areaColor: '#FFD700'
-                        }
-                    },
-                    data: data
-                }
-            ]
-        };
+            data: provincesData
+        }]
+    };
 
-        chart.setOption(option);
+    chart.setOption(option);
 
-        // 监听地图点击事件
-        chart.on('click', function (params) {
-            var provinceName = params.name;
-            var keyword = provinceKeywords[provinceName] || "没有关键词";
-            var image = provinceImages[provinceName] || "";
-            showModal(provinceName, keyword, image);
-        });
+    // 鼠标点击事件处理
+    chart.on('click', function (params) {
+        var provinceName = params.name;
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modal').style.display = 'block';
+        document.getElementById('modal-text').innerText = provinceKeywords[provinceName] || '暂无信息';
+    });
 
-        // 显示弹窗
-        function showModal(title, content, image) {
-            document.getElementById('modal-text').innerText
-                        document.getElementById('modal-text').innerText = title + "\n\n" + content;
-            var imageElement = document.getElementById('modal-image');
-            if (image) {
-                imageElement.innerHTML = `<img src="${image}" alt="${title}">`;
-            } else {
-                imageElement.innerHTML = ""; // 如果没有图片，清空图片区域
-            }
-            document.getElementById('modal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+    // 关闭弹窗
+    function closeModal() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('modal').style.display = 'none';
+    }
+</script>
 
-        // 关闭弹窗
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        // 点击遮罩层关闭弹窗
-        document.getElementById('overlay').addEventListener('click', closeModal);
-    </script>
 </body>
 </html>
