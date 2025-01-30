@@ -51,13 +51,28 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
         }
         .modal-content {
+            display: flex;
+            align-items: center;
+        }
+        .modal-text {
+            flex: 1;
             font-size: 18px;
             color: #333;
             white-space: pre-line; /* 保持换行 */
+            margin-right: 20px;
+        }
+        .modal-image {
+            flex: 1;
+            text-align: right;
+        }
+        .modal-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
         }
         .close {
             position: absolute;
@@ -85,7 +100,10 @@
     <!-- 弹窗结构 -->
     <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
-        <div class="modal-content" id="modal-content"></div>
+        <div class="modal-content">
+            <div class="modal-text" id="modal-text"></div>
+            <div class="modal-image" id="modal-image"></div>
+        </div>
     </div>
     <div id="overlay" class="overlay"></div>
     <script>
@@ -139,6 +157,42 @@
             "台湾省": `台北绝美日落\n碧山巖黄昏全景\n泡温泉\n吃拉面\n文艺生活\n黄昏人海\n台湾八景\n象山峰夜景\n车站段墙上的文字\n故宫博物院\n老蒋搬的珍宝\n台北秋季\n烟雨弥漫老街\n中正纪念堂`,
             "香港特别行政区": `追星成功\n万能开局四步杀\n旷野气息`,
             "澳门特别行政区": `堵爆`
+        };
+
+        var provinceImages = {
+            "新疆维吾尔自治区": "乌鲁木齐_img_12.jpg",
+            "甘肃省": "兰州_img_26.jpg",
+            "北京市": "北京_img_12.jpg",
+            "江苏省": "南京_img_37.jpg",
+            "广西省": "南宁_img_4.jpg",
+            "江西省": "南昌_img_9.jpg",
+            "台湾省": "台北_img_3.jpg",
+            "安徽省": "合肥_img_24.jpg",
+            "内蒙古自治区": "呼和浩特_img_43.jpg",
+            "黑龙江省": "哈尔滨_img_11.jpg",
+            "天津市": "天津_img_17.jpg",
+            "山西省": "太原_img_10.jpg",
+            "广东省": "广州_img_32.jpg",
+            "四川省": "成都_img_12.jpg",
+            "西藏自治区": "拉萨_img_27.jpg",
+            "云南省": "昆明_img_19.jpg",
+            "浙江省": "杭州_img_19.jpg",
+            "湖北省": "武汉_img_33.jpg",
+            "辽宁省": "沈阳_img_10.jpg",
+            "山东省": "济南_img_12.jpg",
+            "海南省": "海口_img_12.jpg",
+            "澳门特别行政区": "澳门_img_16.jpg",
+            "河北省": "石家庄_img_26.jpg",
+            "福建省": "福州_img_36.jpg",
+            "青海省": "西宁_img_18.jpg",
+            "陕西省": "西安_img_2.jpg",
+            "贵州省": "贵阳_img_20.jpg",
+            "河南省": "郑州_img_6.jpg",
+            "重庆市": "重庆_img_9.jpg",
+            "宁夏回族自治区": "银川_img_30.jpg",
+            "吉林省": "长春_img_11.jpg",
+            "湖南省": "长沙_img_19.jpg",
+            "香港特别行政区": "香港_img_17.jpg"
         };
 
         var data = Object.keys(provinceColors).map(name => ({
@@ -203,12 +257,20 @@
         chart.on('click', function (params) {
             var provinceName = params.name;
             var keyword = provinceKeywords[provinceName] || "没有关键词";
-            showModal(provinceName, keyword);
+            var image = provinceImages[provinceName] || "";
+            showModal(provinceName, keyword, image);
         });
 
         // 显示弹窗
-        function showModal(title, content) {
-            document.getElementById('modal-content').innerText = content;
+        function showModal(title, content, image) {
+            document.getElementById('modal-text').innerText
+                        document.getElementById('modal-text').innerText = title + "\n\n" + content;
+            var imageElement = document.getElementById('modal-image');
+            if (image) {
+                imageElement.innerHTML = `<img src="${image}" alt="${title}">`;
+            } else {
+                imageElement.innerHTML = ""; // 如果没有图片，清空图片区域
+            }
             document.getElementById('modal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
