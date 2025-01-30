@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
@@ -93,7 +93,11 @@
             marker: {
                 size: bubbleSizes.map(size => size * 100), // 放大气泡大小
                 color: colors,
-                opacity: 0.8
+                opacity: 0.8,
+                line: {
+                    color: 'lightgray', // 浅灰色边缘
+                    width: 2 // 边缘宽度
+                }
             }
         }];
 
